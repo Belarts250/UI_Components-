@@ -1,0 +1,15 @@
+{
+	"folders": [
+		{
+			"name": "3dcar",
+			"path": "../.."
+		},
+		{
+			"name": "car",
+			"path": "C:/Users/user/Downloads/car"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "3dcar"
+	}
+}

@@ -28,11 +28,31 @@ const loader = new GLTFLoader();
 
 //Load the file
 loader.load(
-  `./${objToRender}/scene.gltf`,
+  `./car/scene.gltf`,
   function (gltf) {
     //If the file is loaded, add it to the scene
     object = gltf.scene;
+    
+    // Calculate the bounding box to center and scale the model
+    const box = new THREE.Box3().setFromObject(object);
+    const center = box.getCenter(new THREE.Vector3());
+    const size = box.getSize(new THREE.Vector3());
+    
+    // Move the model so its center is at the origin (0, 0, 0)
+    object.position.x = -center.x;
+    object.position.y = -center.y;
+    object.position.z = -center.z;
+    
+    // Scale the model if it's too large or too small
+    // This ensures the model fits nicely in the view
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const scale = 10 / maxDim; // Scale to fit within 10 units
+    object.scale.multiplyScalar(scale);
+    
     scene.add(object);
+    
+    // Make camera look at the center where the model now is
+    camera.lookAt(0, 0, 0);
   },
   function (xhr) {
     //While it is loading, log the progress
@@ -72,6 +92,11 @@ if (objToRender === "car") {
 function animate() {
   requestAnimationFrame(animate);
   //Here we could add some code to update the scene, adding some automatic movement
+
+  //Update controls if they exist
+  if (controls) {
+    controls.update();
+  }
 
   //Make the car move
   if (object && objToRender === "car") {

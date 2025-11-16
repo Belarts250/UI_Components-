@@ -17,7 +17,7 @@ header h1{
 
 #container3d canvas {
     width: 100vw !important;
-    height: 100vw !important;
+    height: 100vh !important;
     position: absolute;
     top: 0;
     left: 0;
