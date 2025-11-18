@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Three.js Zero Setup Test</title>
+  <style>
+    /* ensure canvas fills viewport and no white margin */
+    html, body { height:100%; margin:0; }
+    body { overflow:hidden; background:#111; }
+    canvas { display:block; }
+  </style>
+</head>
+<body>
+  <script type="module">
+    // Import three.js from the CDN (module build)
+    import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+
+    // 1) Scene = world
+    const scene = new THREE.Scene();
+
+    // 2) Camera = your eyes (Perspective)
+    const camera = new THREE.PerspectiveCamera(
+      70,                       // fov
+      window.innerWidth / window.innerHeight, // aspect
+      0.1,                      // near
+      1000                      // far
+    );
+    camera.position.z = 5;
+
+    // 3) Renderer = draws the scene on a canvas
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x111111); // background color
+    document.body.appendChild(renderer.domElement);
+
+    // 4) Geometry + Material + Mesh = visible object
+    const geometry = new THREE.BoxGeometry(1.5, 1.5, 1.5);
+    const material = new THREE.MeshStandardMaterial({ color: 0xffff34 });
+    const cube = new THREE.Mesh(geometry, material);
+    scene.add(cube);
+
+
+    // 5) Light (Standard material needs light)
+    const light = new THREE.PointLight(0xffffaaa, 10);
+    light.position.set(2, 3, 4);
+    scene.add(light);
+    const ambient = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambient);
+
+    // 6) Handle resizing
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // 7) Animation loop
+    function animate() {
+      requestAnimationFrame(animate);
+      cube.rotation.x += 0.05;
+      cube.rotation.y += 0.05;
+      cube.rotation.z += 0.05;
+      renderer.render(scene, camera);
+    }
+    animate();
+
+  </script>
+</body>
+</html>
