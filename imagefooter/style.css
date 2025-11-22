@@ -1,0 +1,34 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+.img{
+    background: url("./footer.jpg") no-repeat center center;
+    background-size: cover;
+    height: 700px;
+    width: 100%;
+}
+
+.footer{
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    background-color: black;
+    padding: 0px 50px 50px 50px;
+    gap: 50px;
+    color: white;
+
+}
+
+.footer h1{
+    margin-bottom: 20px;
+}
+
+.footer a{
+    color: white;
+    display: block;
+    margin-bottom: 8px;
+    text-decoration: none;
+}
