@@ -616,7 +616,7 @@ export default function Home() {
 
       </div>
 
-      {/* --- Footer using foot.jpg --- */}
+      
       <footer id="contact" className="relative bg-[#0F0F0F] pt-32 pb-10 border-t border-zinc-800/50 overflow-hidden text-white font-sans selection:bg-zinc-800">
         <div 
           className="absolute inset-0 z-0 opacity-20 pointer-events-none"
