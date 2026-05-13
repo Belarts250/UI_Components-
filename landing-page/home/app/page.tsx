@@ -3,6 +3,13 @@
 import Image from "next/image";
 import { Search, Box, Command, Zap, Play, Cloud, User, Gamepad2, ChevronLeft, ChevronRight, Globe, Monitor, Map, Glasses } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { gsap } from "gsap";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+
+
+if(typeof window !== "undefined"){
+  gsap.registerPlugin(ScrollToPlugin)
+}
 
 export default function Home() {
   // Scroll animation state
@@ -58,6 +65,15 @@ export default function Home() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [features.length]);
 
+    const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    e.preventDefault();
+    gsap.to(window, {
+      duration: 1.5,
+      scrollTo: { y: targetId, autoKill: true },
+      ease: "power3.inOut",
+    });
+  };
+
   return (
     <div className="font-sans">
       {/* --- Section 0: The existing light mode hero --- */}
@@ -88,10 +104,34 @@ export default function Home() {
             </div>
             
             <nav className="hidden md:flex items-center gap-12 text-[13px] font-medium text-zinc-500">
-              <a href="#" className="hover:text-black transition-colors">Home</a>
-              <a href="#" className="hover:text-black transition-colors">About</a>
-              <a href="#" className="hover:text-black transition-colors">Services</a>
-              <a href="#" className="hover:text-black transition-colors">Contact</a>
+            <a 
+                  href="#home" 
+                  onClick={(e) => handleNavClick(e, "#home")} 
+                  className="hover:text-black transition-colors"
+                >
+                  Home
+                </a>
+                <a 
+                  href="#about" 
+                  onClick={(e) => handleNavClick(e, "#about")} 
+                  className="hover:text-black transition-colors"
+                >
+                  About
+                </a>
+                <a 
+                  href="#services" 
+                  onClick={(e) => handleNavClick(e, "#services")} 
+                  className="hover:text-black transition-colors"
+                >
+                  Services
+                </a>
+                <a 
+                  href="#contact" 
+                  onClick={(e) => handleNavClick(e, "#contact")} 
+                  className="hover:text-black transition-colors"
+                >
+                  Contact
+                </a>
             </nav>
             
             <div className="relative">
@@ -159,7 +199,7 @@ export default function Home() {
             </div>
 
             {/* Right Column */}
-            <div className="w-full md:w-[45%] relative">
+            <div  className="w-full md:w-[45%] relative">
               {/* The VR User Image */}
               <div className="absolute bottom-[-2%] right-[-60%] w-[250%] h-[290%] z-0 pointer-events-none">
                 <Image 
@@ -198,7 +238,7 @@ export default function Home() {
       <div className="bg-[#0F0F0F] text-white selection:bg-zinc-800 min-h-screen border-t border-[#0F0F0F]">
         
         {/* Section 1: ABOUT US */}
-        <section className="max-w-[1400px] mx-auto px-10 py-32 flex flex-col md:flex-row items-center gap-20">
+        <section id="about" className="max-w-[1400px] mx-auto px-10 py-32 flex flex-col md:flex-row items-center gap-20">
           <div className="w-[120px] h-[400px] md:w-1/2 relative aspect-square md:aspect-[4/5] rounded-[2.5rem] overflow-hidden">
             <Image 
               src="/vr.png" 
@@ -235,7 +275,7 @@ export default function Home() {
         </section>
 
         {/* Section 2: OUR SERVICE */}
-        <section className="max-w-[1400px] mx-auto px-10 py-32 flex flex-col items-center">
+        <section id="services" className="max-w-[1400px] mx-auto px-10 py-32 flex flex-col items-center">
           
           {/* Centered Title Area */}
           <div className="flex flex-col items-center justify-center text-center mb-24 w-full">
@@ -341,7 +381,7 @@ export default function Home() {
         </section>
 
         {/* Section 3: LIMITLESS POSSIBILITIES (Sticky Scroll) */}
-        <section className="relative mt-20" ref={containerRef} style={{ height: "500vh" }}>
+        <section id="#services" className="relative mt-20" ref={containerRef} style={{ height: "500vh" }}>
           <div className="sticky top-0 h-screen flex flex-col justify-center max-w-[1400px] mx-auto px-10 overflow-hidden">
             <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-16 max-w-xl leading-tight">
               LIMITLESS POSSIBILITIES<br />WITH NEOVISION
@@ -418,7 +458,7 @@ export default function Home() {
           {/* subtle background wave */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden flex items-center justify-center opacity-20">
             <svg width="100%" height="100%" viewBox="0 0 1000 300" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M-100 150 C 200 50, 400 300, 1100 100" stroke="#333" strokeWidth="2" fill="none" />
+              <path d="M-200 120 C 200 50, 400 300, 1100 200" stroke="#ffffff" strokeWidth="18" fill="none" />
             </svg>
           </div>
           
@@ -506,7 +546,7 @@ export default function Home() {
       </div>
 
       {/* --- Footer using foot.jpg --- */}
-      <footer className="relative bg-[#0F0F0F] pt-32 pb-10 border-t border-zinc-800/50 overflow-hidden text-white font-sans selection:bg-zinc-800">
+      <footer id="contact" className="relative bg-[#0F0F0F] pt-32 pb-10 border-t border-zinc-800/50 overflow-hidden text-white font-sans selection:bg-zinc-800">
         <div 
           className="absolute inset-0 z-0 opacity-20 pointer-events-none"
           style={{
@@ -591,7 +631,7 @@ export default function Home() {
             
           </div>
 
-          <div className="text-center w-full h-[7vw] overflow-hidden relative mb-8">
+          <div id="contacts" className="text-center w-full h-[7vw] overflow-hidden relative mb-8">
             <h1 className="text-[12vw] font-bold tracking-tighter leading-none select-none whitespace-nowrap absolute top-0 left-1/2 -translate-x-1/2 flex">
               {"NEOVISION".split('').map((letter, i) => (
                 <span key={i} className="text-white opacity-[0.04] hover:opacity-20 transition-opacity duration-300 cursor-default">
