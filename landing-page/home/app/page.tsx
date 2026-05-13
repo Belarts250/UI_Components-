@@ -526,7 +526,7 @@ export default function Home() {
 
         {/* Section 4: VOICES OF THE FUTURE */}
         <section className="relative max-w-[1400px] mx-auto px-10 py-32 flex flex-col lg:flex-row gap-20 items-center">
-          {/* subtle background wave */}
+          
           <div className="absolute inset-0 pointer-events-none overflow-hidden flex items-center justify-center opacity-20">
             <svg width="100%" height="100%" viewBox="0 0 1000 300" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M-200 120 C 200 50, 400 300, 1100 200" stroke="#ffffff" strokeWidth="18" fill="none" />
