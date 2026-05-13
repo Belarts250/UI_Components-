@@ -585,7 +585,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Section 5: DIVE INTO THE FUTURE */}
+       
         <section className="max-w-[1400px] mx-auto px-10 py-20 pb-32">
           <div className="relative w-full aspect-[21/9] rounded-[2.5rem] overflow-hidden group">
             <video 
