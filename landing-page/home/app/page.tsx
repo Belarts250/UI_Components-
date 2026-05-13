@@ -5,10 +5,10 @@ import { Search, Box, Command, Zap, Play, Cloud, User, Gamepad2, ChevronLeft, Ch
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
-
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 if(typeof window !== "undefined"){
-  gsap.registerPlugin(ScrollToPlugin)
+  gsap.registerPlugin(ScrollToPlugin, ScrollTrigger)
 }
 
 export default function Home() {
@@ -62,7 +62,32 @@ export default function Home() {
 
     window.addEventListener("scroll", handleScroll);
     handleScroll(); // initialize
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    // GSAP Scroll Animations for Texts
+    const textElements = document.querySelectorAll(".gsap-text");
+    textElements.forEach((el) => {
+      gsap.fromTo(el,
+        { y: 30, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: el,
+            start: "top 95%",
+            end: "top 60%",
+            scrub: 1,
+            toggleActions: "play reverse play reverse",
+          }
+        }
+      );
+    });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      ScrollTrigger.getAll().forEach(t => t.kill());
+    };
   }, [features.length]);
 
     const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
@@ -79,17 +104,29 @@ export default function Home() {
       {/* --- Section 0: The existing light mode hero --- */}
       <div className="relative min-h-screen bg-[#F5F5F7] overflow-hidden text-zinc-900 selection:bg-zinc-200">
         
-        {/* Grey clip-path shape in the middle given by the user */}
+        {/* Grey clip-path shape */}
         <div 
-          className="absolute top-0 left-0 w-full h-full bg-[#E8E8EB] z-0 pointer-events-none"
+          className="absolute top-0 left-0 w-full h-full bg-[#E8E8EB] z-0 pointer-events-none hidden md:block"
           style={{
             clipPath: "polygon(43% 65%, 55% 41%, 100% 40%, 100% 46%, 56% 47%, 44% 71%, 0 71%, 0 66%)"
           }}
         />
-
-        {/* Black bottom shape */}
         <div 
-          className="absolute bottom-[-1px] left-0 w-[55%] h-24 bg-[#0F0F0F] z-10"
+          className="absolute top-0 left-0 w-full h-full bg-[#E8E8EB] z-0 pointer-events-none md:hidden"
+          style={{
+            clipPath: "polygon(0 71%, 100% 42%, 100% 51%, 0 80%)"
+          }}
+        />
+
+        {/* Mobile Black bottom shape */}
+        <div 
+          className="absolute top-0 left-0 w-full h-full bg-[#0F0F0F] z-0 pointer-events-none md:hidden"
+          style={{ clipPath: "polygon(0 80%, 100% 51%, 100% 100%, 0 100%)" }}
+        />
+
+        {/* Black bottom shape (Desktop) */}
+        <div 
+          className="absolute bottom-[-1px] left-0 w-[55%] h-24 bg-[#0F0F0F] z-10 hidden md:block"
           style={{
             clipPath: "polygon(0 0, 85% 0, 100% 100%, 0 100%)"
           }}
@@ -145,25 +182,29 @@ export default function Home() {
           </header>
 
           {/* Main Content Area */}
-          <main className="flex-1 flex flex-col md:flex-row mt-28 relative">
+          <main className="flex-1 flex flex-col md:flex-row mt-10 md:mt-28 relative z-20">
             {/* Left Column */}
-            <div className="w-full mt-32 md:w-[55%] flex flex-col">
+            <div className="w-full mt-10 md:mt-32 md:w-[55%] flex flex-col">
               <div className="flex gap-4">
-                <span className="text-zinc-800 text-sm font-medium mt-2">05</span>
-                <div className="flex-1">
-                  <p className="text-zinc-500 text-xs tracking-[0.3em] font-semibold uppercase mb-6">Futuristic</p>
+                <span className="text-zinc-800 text-sm font-medium mt-2 hidden md:block">05</span>
+                <div className="flex-1 relative">
+                  {/* Mobile icon absolute positioned to right of "Futuristic" */}
+                  <div className="absolute right-0 top-0 w-12 h-12 rounded-full border border-zinc-300 flex items-center justify-center flex-shrink-0 md:hidden z-30">
+                    <Command className="w-5 h-5 text-zinc-800" strokeWidth={1.5} />
+                  </div>
+                  <p className="text-zinc-500 text-xs tracking-[0.3em] font-semibold uppercase mb-6 gsap-text">Futuristic</p>
                   <div className="relative inline-block mb-10 w-full">
-                    <h1 className="text-[5.5rem] leading-[1.1] tracking-[-0.03em] font-medium text-zinc-900">
+                    <h1 className="text-5xl md:text-[5.5rem] leading-[1.1] tracking-[-0.03em] font-medium text-zinc-900 gsap-text">
                       NEW DIGITAL<br />
                       UNIVERSE
                     </h1>
                     {/* Decorative curved line over DIGITAL */}
-                    <svg className="absolute top-[8%] left-[26%] w-[60%] h-[50%] pointer-events-none stroke-zinc-400 fill-none" viewBox="0 0 300 100" preserveAspectRatio="none">
+                    <svg className="absolute top-[8%] left-[26%] w-[60%] h-[50%] pointer-events-none stroke-zinc-400 fill-none hidden md:block" viewBox="0 0 300 100" preserveAspectRatio="none">
                       <path d="M 0,80 Q 150,-50 300,50" strokeWidth="1.5" />
                     </svg>
                   </div>
                   
-                  <div className="flex items-center gap-8 mb-24">
+                  <div className="flex items-center gap-8 mb-16 md:mb-24 gsap-text">
                     <button className="bg-[#1C1C1C] text-white px-8 py-3.5 rounded-xl text-[13px] font-medium hover:bg-black transition-colors shadow-lg shadow-black/10">
                       Get Started
                     </button>
@@ -172,25 +213,32 @@ export default function Home() {
                     </a>
                   </div>
 
-                  <div className="flex items-start gap-20 max-w-2xl pt-36">
-                    <div>
-                      <p className="text-xs text-zinc-500 mb-3 font-medium">Trusted by Clients</p>
+                  <div className="flex flex-row items-start gap-10 md:gap-20 max-w-2xl md:pt-36 gsap-text">
+                    <div className="flex-1 md:flex-none">
+                      <p className="text-xs text-zinc-500 mb-3 font-medium hidden md:block">Trusted by Clients</p>
+                      <p className="text-xs text-zinc-500 mb-3 font-medium md:hidden leading-tight">Trusted<br/>by<br/>Clients</p>
                       <div className="flex items-center gap-4">
-                        <div className="flex -space-x-3">
+                        <div className="hidden md:flex -space-x-3">
                           <img src="https://i.pravatar.cc/100?img=1" alt="Client 1" className="w-10 h-10 rounded-full border-2 border-[#F5F5F7] z-30 object-cover" />
                           <img src="https://i.pravatar.cc/100?img=2" alt="Client 2" className="w-10 h-10 rounded-full border-2 border-[#F5F5F7] z-20 object-cover" />
                           <img src="https://i.pravatar.cc/100?img=3" alt="Client 3" className="w-10 h-10 rounded-full border-2 border-[#F5F5F7] z-10 object-cover" />
                           <img src="https://i.pravatar.cc/100?img=4" alt="Client 4" className="w-10 h-10 rounded-full border-2 border-[#F5F5F7] z-0 object-cover" />
                         </div>
-                        <span className="font-semibold text-lg text-zinc-800">20+</span>
+                        <span className="font-semibold text-lg text-zinc-800 mt-2 md:mt-0">20+</span>
+                      </div>
+
+                      {/* Reality Percentage Mobile */}
+                      <div className="md:hidden mt-8">
+                        <p className="text-3xl font-medium text-zinc-900 tracking-tight">47.2%</p>
+                        <p className="text-zinc-500 text-sm mt-1 font-medium">Reality</p>
                       </div>
                     </div>
                     
-                    <div className="w-12 h-12 rounded-full border border-zinc-300 flex items-center justify-center flex-shrink-0 mt-5">
+                    <div className="w-12 h-12 rounded-full border border-zinc-300 items-center justify-center flex-shrink-0 mt-5 hidden md:flex">
                       <Command className="w-5 h-5 text-zinc-800" strokeWidth={1.5} />
                     </div>
 
-                    <p className="text-[13px] text-zinc-500 leading-relaxed max-w-[280px] mt-4 font-medium">
+                    <p className="text-[13px] text-zinc-500 leading-relaxed max-w-[280px] mt-4 font-medium flex-1 md:flex-none md:mt-4">
                       In this futuristic realm, users can explore hyper-realistic virtual environments, interact with AI-driven avatars.
                     </p>
                   </div>
@@ -199,9 +247,22 @@ export default function Home() {
             </div>
 
             {/* Right Column */}
-            <div  className="w-full md:w-[45%] relative">
-              {/* The VR User Image */}
-              <div className="absolute bottom-[-2%] right-[-60%] w-[250%] h-[290%] z-0 pointer-events-none">
+            <div  className="w-full md:w-[45%] relative mt-32 md:mt-0 flex flex-col items-center md:block">
+              {/* Bottom Bar Content Mobile (flowing naturally before image) */}
+              <div className="md:hidden w-full flex items-center justify-start gap-6 z-20 pointer-events-none gsap-text mt-20 mb-8 pl-4">
+                <div className="w-8 h-[1px] bg-zinc-600" />
+                <div className="flex items-center gap-2 pointer-events-auto">
+                  <Command className="w-4 h-4 text-zinc-500" />
+                  <span className="font-semibold tracking-wide text-base text-zinc-400">Logoipsum</span>
+                </div>
+                <div className="flex items-center gap-2 pointer-events-auto">
+                  <Zap className="w-4 h-4 text-zinc-500" />
+                  <span className="font-semibold tracking-wide text-base text-zinc-400">Logoipsum</span>
+                </div>
+              </div>
+
+              {/* The VR User Image Desktop */}
+              <div className="absolute bottom-[-2%] right-[-60%] w-[250%] h-[290%] z-0 pointer-events-none hidden md:block">
                 <Image 
                   src="/vr.png" 
                   alt="VR User" 
@@ -211,16 +272,27 @@ export default function Home() {
                 />
               </div>
 
-              {/* Reality Percentage */}
-              <div className="absolute top-[65%] left-0 z-20">
+              {/* The VR User Image Mobile */}
+              <div className="md:hidden relative w-[220px] h-[450px] rounded-[100px] overflow-hidden z-20 mt-6 mb-20 bg-[#161616]">
+                <Image 
+                  src="/vr.png" 
+                  alt="VR User" 
+                  fill 
+                  className="object-cover object-center mix-blend-lighten opacity-90"
+                  priority
+                />
+              </div>
+
+              {/* Reality Percentage Desktop */}
+              <div className="absolute top-[65%] left-0 z-20 hidden md:block gsap-text">
                 <p className="text-3xl font-medium text-zinc-900 tracking-tight">47.2%</p>
                 <p className="text-zinc-500 text-sm mt-1 font-medium">Reality</p>
               </div>
             </div>
           </main>
 
-          {/* Bottom Bar Content (over black shape) */}
-          <footer className="mt-auto h-24 flex items-center gap-12 text-zinc-400 z-20 absolute bottom-0 left-10 w-full pointer-events-none">
+          {/* Bottom Bar Content (over black shape) Desktop */}
+          <footer className="hidden md:flex mt-auto h-24 items-center gap-12 text-zinc-400 z-20 absolute bottom-0 left-10 w-full pointer-events-none gsap-text">
             <div className="w-12 h-[1px] bg-zinc-600" />
             <div className="flex items-center gap-2 pointer-events-auto">
               <Command className="w-5 h-5 text-zinc-500" />
@@ -248,8 +320,8 @@ export default function Home() {
             />
           </div>
           <div className="w-full md:w-1/2 flex flex-col items-start">
-            <p className="text-zinc-500 text-xs tracking-[0.3em] font-semibold uppercase mb-6">About Us</p>
-            <h2 className="text-5xl md:text-6xl font-medium tracking-tight mb-8 leading-tight">
+            <p className="text-zinc-500 text-xs tracking-[0.3em] font-semibold uppercase mb-6 gsap-text">About Us</p>
+            <h2 className="text-5xl md:text-6xl font-medium tracking-tight mb-8 leading-tight gsap-text">
               THE DIGITAL<br />FRONTIER
             </h2>
             <div className="flex gap-3 mb-10">
@@ -279,10 +351,10 @@ export default function Home() {
           
           {/* Centered Title Area */}
           <div className="flex flex-col items-center justify-center text-center mb-24 w-full">
-            <h2 className="text-5xl md:text-[4rem] font-bold tracking-tight leading-[1.15] text-white mb-6 uppercase">
+            <h2 className="text-5xl md:text-[4rem] font-bold tracking-tight leading-[1.15] text-white mb-6 uppercase gsap-text">
               Our Services.
             </h2>
-            <p className="text-zinc-400 text-lg md:text-xl font-light tracking-wide">
+            <p className="text-zinc-400 text-lg md:text-xl font-light tracking-wide gsap-text">
               Unmatched Services. Unmatched Excellence.
             </p>
           </div>
@@ -380,7 +452,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Section 3: LIMITLESS POSSIBILITIES (Sticky Scroll) */}
         <section id="#services" className="relative mt-20" ref={containerRef} style={{ height: "500vh" }}>
           <div className="sticky top-0 h-screen flex flex-col justify-center max-w-[1400px] mx-auto px-10 overflow-hidden">
             <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-16 max-w-xl leading-tight">
@@ -463,11 +534,11 @@ export default function Home() {
           </div>
           
           <div className="w-full lg:w-1/2 relative z-10">
-            <h2 className="text-5xl md:text-6xl font-medium tracking-tight mb-8 leading-tight uppercase">
+            <h2 className="text-5xl md:text-6xl font-medium tracking-tight mb-8 leading-tight uppercase gsap-text">
               VOICES OF THE<br />FUTURE
             </h2>
-            <div className="w-full max-w-sm h-[1px] bg-zinc-800 mb-8" />
-            <p className="text-zinc-500 text-lg leading-relaxed max-w-md">
+            <div className="w-full max-w-sm h-[1px] bg-zinc-800 mb-8 gsap-text" />
+            <p className="text-zinc-500 text-lg leading-relaxed max-w-md gsap-text">
               Here, you'll hear firsthand from users, pioneers, and tech enthusiasts who are shaping this next generation of virtual reality and futuristic technology. Explore their stories and discover how we is transforming the way we interact with the digital world.
             </p>
           </div>
@@ -528,14 +599,14 @@ export default function Home() {
             </video>
             <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent z-10" />
             <div className="absolute inset-0 z-20 flex flex-col md:flex-row items-center justify-between p-12 md:p-24">
-              <h2 className="text-5xl md:text-7xl font-medium tracking-tight text-white max-w-lg leading-[1.1] uppercase">
+              <h2 className="text-5xl md:text-7xl font-medium tracking-tight text-white max-w-lg leading-[1.1] uppercase gsap-text">
                 DIVE INTO THE<br />FUTURE
               </h2>
               <div className="flex flex-col items-center md:items-end gap-6 max-w-xs text-center md:text-right mt-10 md:mt-0">
-                <button className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center hover:bg-white/20 transition-all hover:scale-110 border border-white/20">
+                <button className="w-16 h-16 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center hover:bg-white/20 transition-all hover:scale-110 border border-white/20 gsap-text">
                   <Play className="w-6 h-6 text-white ml-1 fill-current" />
                 </button>
-                <p className="text-zinc-300 text-base leading-relaxed">
+                <p className="text-zinc-300 text-base leading-relaxed gsap-text">
                   Immerse yourself in the groundbreaking world of NeoVision. Explore the limitless possibilities of futuristic technology and virtual reality.
                 </p>
               </div>
