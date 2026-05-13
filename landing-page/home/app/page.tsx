@@ -557,7 +557,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Testimonial 2 */}
             <div className="bg-[#161616] rounded-3xl p-8 flex items-center justify-between gap-6 hover:bg-[#1a1a1a] transition-colors border border-transparent hover:border-zinc-800">
               <div className="flex-1">
                 <p className="text-zinc-400 text-base leading-relaxed mb-6">
